@@ -13,7 +13,7 @@ export default function Home() {
       <div className="content bg-gray-100 w-full">
         <div className="my-[16px] py-[8px] mr-[24px] flex justify-end">
           <button
-            className="py-2 px-4 bg-red-600 rounded-lg text-white"
+            className="py-2 px-4 bg-red-600 rounded-lg text-white hover:bg-red-700"
             onClick={logoutfunction}
           >
             Log out
