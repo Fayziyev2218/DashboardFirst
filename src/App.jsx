@@ -7,6 +7,12 @@ import Login from "./login/login";
 import Home from "./pages/home";
 import Category from "./pages/category";
 import Discaunt from "./pages/discaunt";
+import Size from "./pages/size";
+import Colors from "./pages/colors";
+import Faq from "./pages/faq";
+import Contact from "./pages/contact";
+import Team from "./pages/team";
+import News from "./pages/news";
 
 function App() {
   const tokens = localStorage.getItem("tokenInfo");
@@ -32,6 +38,12 @@ function App() {
             <Route index element={<Category />} /> 
             <Route path="category" element={<Category />} />
             <Route path="discaunt" element={<Discaunt />} />
+            <Route path="size" element={<Size />} />
+            <Route path="colors" element={<Colors />} />
+            <Route path="faq" element={<Faq />} />
+            <Route path="contact" element={<Contact />} />
+            <Route path="team" element={<Team />} />
+            <Route path="news" element={<News />} />
             
           </Route>
         </Routes>

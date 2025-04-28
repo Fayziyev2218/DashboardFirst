@@ -38,38 +38,36 @@ export default function Discaunt() {
         <table className="min-w-full text-sm text-gray-600">
           <thead className="bg-gray-800 text-white">
             <tr>
-              <th className="py-3 px-6 text-left">№</th>
-              <th className="py-3 px-6 text-left">Discount (%)</th>
-              <th className="py-3 px-6 text-left">Created Date</th>
-              <th className="py-3 px-6 text-left">Finished Date</th>
-              <th className="py-3 px-6 text-left">Status</th>{" "}
-              <th className="py-3 px-6 text-left">Actions</th>{" "}
-              {/* New column for Total */}
+              <th className="py-3 px-6 text-center">№</th>
+              <th className="py-3 px-6 text-center">Discount (%)</th>
+              <th className="py-3 px-6 text-center">Created Date</th>
+              <th className="py-3 px-6 text-center">Finished Date</th>
+              <th className="py-3 px-6 text-center">Status</th>
+              <th className="py-3 px-6 text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
             {data.map((item) => (
               <tr key={item.id} className="border-b hover:bg-gray-100">
-                <td className="py-3 px-6">{item.id}</td>
-                <td className="py-3 px-6">{item.name}</td>
-                <td className="py-3 px-6">{item.price}</td>
-                <td className="py-3 px-6">{item.quantity}</td>
-                <td className="py-3 px-6">Status</td>
-                <td className="py-3 px-6">
+                <td className="py-3 px-6 text-center">{item.id}</td>
+                <td className="py-3 px-6 text-center">{item.name}</td>
+                <td className="py-3 px-6 text-center">{item.price}</td>
+                <td className="py-3 px-6 text-center">{item.quantity}</td>
+                <td className="py-3 px-6 text-center">Status</td>
+                <td className="py-3 px-6 text-center">
                   <button
                     onClick={ModalEdit}
                     className="py-2 px-4 bg-yellow-400 hover:bg-yellow-500 rounded-lg text-white"
                   >
-                    Edit{" "}
-                  </button>{" "}
+                    Edit
+                  </button>
                   <button
                     onClick={ModalDelete}
                     className="py-2 px-4 bg-red-500 hover:bg-red-600 rounded-lg text-white"
                   >
                     Delete
                   </button>
-                </td>{" "}
-                {/* Total calculation */}
+                </td>
               </tr>
             ))}
           </tbody>

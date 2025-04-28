@@ -9,8 +9,8 @@ export default function Home() {
   };
   return (
     <div className="home-layout flex">
-      <Saytbar />
-      <div className="content bg-gray-100 w-full">
+      <Saytbar /> 
+      <div className="content bg-gray-100 w-[81%] ml-auto">
         <div className="my-[16px] py-[8px] mr-[24px] flex justify-end">
           <button
             className="py-2 px-4 bg-red-600 rounded-lg text-white hover:bg-red-700"
@@ -20,7 +20,7 @@ export default function Home() {
           </button>
         </div>
         <div className="mx-auto px-[24px]">
-          <Outlet /> {/* Ichki sahifalar shu yerda ko'rinadi */}
+          <Outlet />
         </div>
       </div>
     </div>

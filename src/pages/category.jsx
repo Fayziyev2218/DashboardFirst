@@ -1,25 +1,91 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../componets/modal";
+import { toast } from "react-toastify";
 
 export default function Category() {
   const [isOpen, setIsOpen] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
+  const [getcate,setGetcate] = useState([])
+  const [selectedId, setSelectedId] = useState(null);
+
+  const [name_en,setName_en] = useState()
+  const [name_ru,setName_ru] = useState()
+  const [name_de,setName_de] = useState()
+
+  const token = localStorage.getItem("tokenInfo")
+  
   const ModalOpen = () => {
     setIsOpen(!isOpen);
   };
-  const ModalDelete = () => {
-    setDeleteModal(!deleteModal);
+  const ModalDelete = (id) => {
+    setSelectedId(id); // id ni saqlaymiz
+    setDeleteModal(true);
   };
   const ModalEdit = () => {
     setEditModal(!editModal);
   };
-  const data = [
-    { id: 1, name: "Item 1", price: "$10", quantity: 5 },
-    { id: 2, name: "Item 2", price: "$20", quantity: 3 },
-    { id: 3, name: "Item 3", price: "$30", quantity: 2 },
-    { id: 4, name: "Item 4", price: "$40", quantity: 7 },
-  ];
+
+  const GetCategory = ()=>{
+    fetch("https://back.ifly.com.uz/api/category")
+    .then((response)=>response.json())
+    .then((res)=>setGetcate(res.data))
+  }
+
+  const CategoryPost = (event)=>{
+    event.preventDefault()
+    fetch("https://back.ifly.com.uz/api/category",{
+      method:"POST",
+      headers:{
+        "Content-type":"application/json",
+        "authorization":`Bearer ${token}`
+      },
+      body:JSON.stringify({
+        name_en:name_en,
+        name_de:name_de,
+        name_ru:name_ru
+      })
+    })
+    .then((response)=>response.json())
+    .then((res)=>{
+      console.log(res);
+      if(res.success){
+        toast.success("Create succesufuly")
+      GetCategory()
+      setIsOpen(false)
+      }else{
+        toast.error(res.message.message)
+      }
+      
+    })
+  }
+
+  const deledecategory = (id) =>{
+     fetch(`https://back.ifly.com.uz/api/category/${id}`,{
+      method:"DELETE",
+      headers:{
+        "Content-type":"application/json",
+        "authorization":`Bearer ${token}`
+      },
+     })
+     .then((response)=>response.json())
+     .then((res)=>{
+      if(res.success){
+        toast.success(res.data.message)
+        GetCategory()
+        setDeleteModal(false)
+      }else{
+        toast.error(res.message.message
+            
+        )
+      }
+     })
+  }
+
+  useEffect(()=>{
+    GetCategory()
+  },[])
+  
   return (
     <>
       <div className="overflow-x-auto bg-white shadow-lg rounded-lg p-4">
@@ -35,35 +101,34 @@ export default function Category() {
         <table className="min-w-full text-sm text-gray-600">
           <thead className="bg-gray-800 text-white">
             <tr>
-              <th className="py-3 px-6 text-left">№</th>
-              <th className="py-3 px-6 text-left">Title ENG</th>
-              <th className="py-3 px-6 text-left">Title RU</th>
-              <th className="py-3 px-6 text-left">Title DE</th>
-              <th className="py-3 px-6 text-left">Actions</th>{" "}
-              {/* New column for Total */}
+              <th className="py-3 px-6 text-center">№</th>
+              <th className="py-3 px-6 text-center">Title ENG</th>
+              <th className="py-3 px-6 text-center">Title RU</th>
+              <th className="py-3 px-6 text-center">Title DE</th>
+              <th className="py-3 px-6 text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {data.map((item) => (
+            {getcate.map((item) => (
               <tr key={item.id} className="border-b hover:bg-gray-100">
-                <td className="py-3 px-6">{item.id}</td>
-                <td className="py-3 px-6">{item.name}</td>
-                <td className="py-3 px-6">{item.price}</td>
-                <td className="py-3 px-6">{item.quantity}</td>
-                <td className="py-3 px-6">
+                <td className="py-3 px-6 text-center">{item.id}</td>
+                <td className="py-3 px-6 text-center">{item.name_en}</td>
+                <td className="py-3 px-6 text-center">{item.name_ru}</td>
+                <td className="py-3 px-6 text-center">{item.name_de}</td>
+                <td className="py-3 px-6 text-center">
                   <button
                     onClick={ModalEdit}
                     className="py-2 px-4 bg-yellow-400 hover:bg-yellow-500 rounded-lg text-white"
                   >
-                    Edit{" "}
-                  </button>{" "}
+                    Edit
+                  </button>
                   <button
-                    onClick={ModalDelete}
+                   onClick={() => ModalDelete(item.id)}
                     className="py-2 px-4 bg-red-500 hover:bg-red-600 rounded-lg text-white"
                   >
                     Delete
                   </button>
-                </td>{" "}
+                </td>
                 {/* Total calculation */}
               </tr>
             ))}
@@ -74,10 +139,11 @@ export default function Category() {
       {/* modal */}
       {isOpen && (
         <Modal close={ModalOpen} title={"Add Category"}>
-          <form>
+          <form onSubmit={CategoryPost}>
             <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
               Category Name (EN)
               <input
+                onChange={((e)=>setName_en(e.target.value))}
                 className="w-full border border-gray-400 rounded-[8px] p-[8px]"
                 type="text"
                 required
@@ -88,6 +154,7 @@ export default function Category() {
             <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
               Category Name (RU)
               <input
+              onChange={((e)=>setName_ru(e.target.value))}
                 className="w-full border border-gray-400 rounded-[8px] p-[8px]"
                 type="text"
                 required
@@ -98,6 +165,7 @@ export default function Category() {
             <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
               Category Name (DE)
               <input
+              onChange={((e)=>setName_de(e.target.value))}
                 className="w-full border border-gray-400 rounded-[8px] p-[8px]"
                 type="text"
                 required
@@ -157,7 +225,6 @@ export default function Category() {
       {deleteModal && (
         <Modal close={ModalDelete} title={"Delete Category"}>
           <p className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
-            {" "}
             Are you sure you want to delete this category?
           </p>
           <div className="flex items-center justify-between">
@@ -167,7 +234,7 @@ export default function Category() {
             >
               Cencel
             </button>
-            <button className="py-2 px-4 bg-red-500 hover:bg-red-600 rounded-lg text-white">
+            <button onClick={() => deledecategory(selectedId)} className="py-2 px-4 bg-red-500 hover:bg-red-600 rounded-lg text-white">
               delete
             </button>
           </div>
