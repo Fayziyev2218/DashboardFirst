@@ -20,7 +20,7 @@ export default function Category() {
   };
   const ModalDelete = (id) => {
     setSelectedId(id); // id ni saqlaymiz
-    setDeleteModal(true);
+    setDeleteModal(!deleteModal);
   };
   const ModalEdit = () => {
     setEditModal(!editModal);
@@ -75,9 +75,7 @@ export default function Category() {
         GetCategory()
         setDeleteModal(false)
       }else{
-        toast.error(res.message.message
-            
-        )
+        toast.error(res.message.message)
       }
      })
   }
@@ -109,9 +107,9 @@ export default function Category() {
             </tr>
           </thead>
           <tbody>
-            {getcate.map((item) => (
+            {getcate.map((item,index) => (
               <tr key={item.id} className="border-b hover:bg-gray-100">
-                <td className="py-3 px-6 text-center">{item.id}</td>
+                <td className="py-3 px-6 text-center">{index+1}</td>
                 <td className="py-3 px-6 text-center">{item.name_en}</td>
                 <td className="py-3 px-6 text-center">{item.name_ru}</td>
                 <td className="py-3 px-6 text-center">{item.name_de}</td>

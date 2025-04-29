@@ -1,23 +1,86 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../componets/modal";
+import { toast } from "react-toastify";
 
 export default function Size() {
   const [isOpen, setIsOpen] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
+  const [getsize,setGetsize] = useState([])
+  const [size,setSize] = useState()
+  const [selectID,setSelectID] = useState(null)
+  const token = localStorage.getItem("tokenInfo")
+
+
   const ModalOpen = () => {
     setIsOpen(!isOpen);
   };
-  const ModalDelete = () => {
+  const ModalDelete = (id) => {
+    setSelectID(id)
     setDeleteModal(!deleteModal);
   };
   const ModalEdit = () => {
     setEditModal(!editModal);
   };
-  const data = [
-    { id: 1, name: "0%", price: "2025-04-05", quantity: "2025-04-24" },
-    { id: 2, name: "0%", price: "2025-04-22", quantity: "2025-04-24" },
-  ];
+
+  const getSizeFunction = ()=>{
+    fetch("https://back.ifly.com.uz/api/sizes")
+    .then((response)=>response.json())
+    .then((res)=>setGetsize(res.data))
+  }
+
+  const postSizeFunction = (event)=>{
+    event.preventDefault()
+    fetch("https://back.ifly.com.uz/api/sizes",{
+      method:"POST",
+      headers:{
+        "Content-type":"application/json",
+        "authorization":`Bearer ${token}`
+      },
+      body:JSON.stringify({
+        size: size
+      })
+    })
+    .then((response)=>response.json())
+    .then((res)=>{
+      console.log(res);
+      if(res.success){
+        toast.success("Create succesufuly")
+      getSizeFunction()
+      setIsOpen(false)
+      }else{
+        toast.error("size must be a string")
+      }
+      
+    })
+  }
+
+  const deleteSizeFunction =(id)=>{
+      fetch(`https://back.ifly.com.uz/api/sizes/${id}`,{
+        method:"DELETE",
+        headers:{
+          "Content-type":"application/json",
+          "authorization":`Bearer ${token}`
+        },
+      })
+      .then((res)=>res.json())
+      .then((data)=>{
+        if(data.success){
+          console.log(data);
+          
+          toast.success("Delete successefuly")
+          getSizeFunction()
+          setDeleteModal(false)
+        }else{
+          toast.error("error")
+        }
+      })
+  }
+  
+
+  useEffect(()=>{
+    getSizeFunction()
+  },[])
   return (
     <>
       <div className="overflow-x-auto bg-white shadow-lg rounded-lg p-4">
@@ -41,10 +104,10 @@ export default function Size() {
             </tr>
           </thead>
           <tbody>
-            {data.map((item) => (
+            {getsize.map((item,index) => (
               <tr key={item.id} className="border-b hover:bg-gray-100">
-                <td className="py-3 px-6 text-center">{item.id}</td>
-                <td className="py-3 px-6 text-center">{item.name}</td>
+                <td className="py-3 px-6 text-center">{index+1}</td>
+                <td className="py-3 px-6 text-center">{item.size}</td>
                 <td className="py-3 px-6 text-center">
                   <button
                     onClick={ModalEdit}
@@ -53,7 +116,7 @@ export default function Size() {
                     Edit
                   </button>
                   <button
-                    onClick={ModalDelete}
+                    onClick={() => ModalDelete(item.id)}
                     className="py-2 px-4 bg-red-500 hover:bg-red-600 rounded-lg text-white"
                   >
                     Delete
@@ -68,13 +131,14 @@ export default function Size() {
       {/* modal */}
       {isOpen && (
         <Modal close={ModalOpen} title={"Add Sizes"}>
-          <form>
+          <form onSubmit={postSizeFunction}>
             <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
               <input
+                onChange={((e)=>setSize(e.target.value))}
                 className="w-full border border-gray-400 rounded-[8px] p-[8px]"
                 type="text"
                 required
-                minLength={3}
+                minLength={1}
                 placeholder="English name"
               />
             </label>
@@ -105,9 +169,8 @@ export default function Size() {
       )}
 
       {deleteModal && (
-        <Modal close={ModalDelete} title={"Delete Discount"}>
+        <Modal close={() => setDeleteModal(false)} title={"Delete Discount"}>
           <p className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
-            {" "}
             Are you sure you want to delete this size?
           </p>
           <div className="flex items-center justify-between">
@@ -117,7 +180,7 @@ export default function Size() {
             >
               Cencel
             </button>
-            <button className="py-2 px-4 bg-red-500 hover:bg-red-600 rounded-lg text-white">
+            <button onClick={() => deleteSizeFunction(selectID)}  className="py-2 px-4 bg-red-500 hover:bg-red-600 rounded-lg text-white">
               delete
             </button>
           </div>
