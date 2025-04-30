@@ -6,15 +6,16 @@ export default function Category() {
   const [isOpen, setIsOpen] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
-  const [getcate,setGetcate] = useState([])
+  const [getcate, setGetcate] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
 
-  const [name_en,setName_en] = useState()
-  const [name_ru,setName_ru] = useState()
-  const [name_de,setName_de] = useState()
+  const [name_en, setName_en] = useState();
+  const [name_ru, setName_ru] = useState();
+  const [name_de, setName_de] = useState();
+  const [clickData, setClickData] = useState();
 
-  const token = localStorage.getItem("tokenInfo")
-  
+  const token = localStorage.getItem("tokenInfo");
+
   const ModalOpen = () => {
     setIsOpen(!isOpen);
   };
@@ -26,69 +27,97 @@ export default function Category() {
     setEditModal(!editModal);
   };
 
-  const GetCategory = ()=>{
+  const GetCategory = () => {
     fetch("https://back.ifly.com.uz/api/category")
-    .then((response)=>response.json())
-    .then((res)=>setGetcate(res.data))
-  }
+      .then((response) => response.json())
+      .then((res) => setGetcate(res.data));
+  };
 
-  const CategoryPost = (event)=>{
-    event.preventDefault()
-    fetch("https://back.ifly.com.uz/api/category",{
-      method:"POST",
-      headers:{
-        "Content-type":"application/json",
-        "authorization":`Bearer ${token}`
+  const CategoryPost = (event) => {
+    event.preventDefault();
+    fetch("https://back.ifly.com.uz/api/category", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+        authorization: `Bearer ${token}`,
       },
-      body:JSON.stringify({
-        name_en:name_en,
-        name_de:name_de,
-        name_ru:name_ru
-      })
+      body: JSON.stringify({
+        name_en: name_en,
+        name_de: name_de,
+        name_ru: name_ru,
+      }),
     })
-    .then((response)=>response.json())
-    .then((res)=>{
-      console.log(res);
-      if(res.success){
-        toast.success("Create succesufuly")
-      GetCategory()
-      setIsOpen(false)
-      }else{
-        toast.error(res.message.message)
-      }
-      
-    })
-  }
+      .then((response) => response.json())
+      .then((res) => {
+        console.log(res);
+        if (res.success) {
+          toast.success("Create succesufuly");
+          GetCategory();
+          setIsOpen(false);
+        } else {
+          toast.error(res.message.message);
+        }
+      });
+  };
 
-  const deledecategory = (id) =>{
-     fetch(`https://back.ifly.com.uz/api/category/${id}`,{
-      method:"DELETE",
-      headers:{
-        "Content-type":"application/json",
-        "authorization":`Bearer ${token}`
+  const CategoryPatch = (event) => {
+    event.preventDefault();
+    fetch(`https://back.ifly.com.uz/api/category/${clickData?.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-type": "application/json",
+        authorization: `Bearer ${token}`,
       },
-     })
-     .then((response)=>response.json())
-     .then((res)=>{
-      if(res.success){
-        toast.success(res.data.message)
-        GetCategory()
-        setDeleteModal(false)
-      }else{
-        toast.error(res.message.message)
-      }
-     })
-  }
+      body: JSON.stringify({
+        name_en: name_en,
+        name_de: name_de,
+        name_ru: name_ru,
+      }),
+    })
+      .then((response) => response.json())
+      .then((res) => {
+        console.log(res);
+        if (res.success) {
+          toast.success("Edit succesufuly");
+          GetCategory();
+          setEditModal(false);
+        } else {
+          toast.error(res.message.message);
+        }
+      });
+  };
 
-  useEffect(()=>{
-    GetCategory()
-  },[])
-  
+  const deledecategory = (id) => {
+    fetch(`https://back.ifly.com.uz/api/category/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((res) => {
+        if (res.success) {
+          toast.success(res.data.message);
+          GetCategory();
+          setDeleteModal(false);
+        } else {
+          toast.error(res.message.message);
+        }
+      });
+  };
+
+  useEffect(() => {
+    GetCategory();
+  }, []);
+
   return (
     <>
       <div className="overflow-x-auto bg-white shadow-lg rounded-lg p-4">
         <div className="mb-[24px] flex items-center justify-between">
-          <h3 className="text-2xl font-bold text-center text-gray-800">Category</h3>
+          <h3 className="text-2xl font-bold text-center text-gray-800">
+            Category
+          </h3>
           <button
             onClick={ModalOpen}
             className="py-2 px-4 bg-green-500 hover:bg-green-600 rounded-lg text-white"
@@ -107,21 +136,24 @@ export default function Category() {
             </tr>
           </thead>
           <tbody>
-            {getcate.map((item,index) => (
+            {getcate.map((item, index) => (
               <tr key={item.id} className="border-b hover:bg-gray-100">
-                <td className="py-3 px-6 text-center">{index+1}</td>
+                <td className="py-3 px-6 text-center">{index + 1}</td>
                 <td className="py-3 px-6 text-center">{item.name_en}</td>
                 <td className="py-3 px-6 text-center">{item.name_ru}</td>
                 <td className="py-3 px-6 text-center">{item.name_de}</td>
                 <td className="py-3 px-6 text-center">
                   <button
-                    onClick={ModalEdit}
+                    onClick={() => {
+                      ModalEdit();
+                      setClickData(item);
+                    }}
                     className="py-2 px-4 bg-yellow-400 hover:bg-yellow-500 rounded-lg text-white"
                   >
                     Edit
                   </button>
                   <button
-                   onClick={() => ModalDelete(item.id)}
+                    onClick={() => ModalDelete(item.id)}
                     className="py-2 px-4 bg-red-500 hover:bg-red-600 rounded-lg text-white"
                   >
                     Delete
@@ -141,7 +173,7 @@ export default function Category() {
             <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
               Category Name (EN)
               <input
-                onChange={((e)=>setName_en(e.target.value))}
+                onChange={(e) => setName_en(e.target.value)}
                 className="w-full border border-gray-400 rounded-[8px] p-[8px]"
                 type="text"
                 required
@@ -152,7 +184,7 @@ export default function Category() {
             <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
               Category Name (RU)
               <input
-              onChange={((e)=>setName_ru(e.target.value))}
+                onChange={(e) => setName_ru(e.target.value)}
                 className="w-full border border-gray-400 rounded-[8px] p-[8px]"
                 type="text"
                 required
@@ -163,7 +195,7 @@ export default function Category() {
             <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
               Category Name (DE)
               <input
-              onChange={((e)=>setName_de(e.target.value))}
+                onChange={(e) => setName_de(e.target.value)}
                 className="w-full border border-gray-400 rounded-[8px] p-[8px]"
                 type="text"
                 required
@@ -181,10 +213,12 @@ export default function Category() {
 
       {editModal && (
         <Modal close={ModalEdit} title={"Update Category"}>
-          <form>
+          <form onSubmit={CategoryPatch}>
             <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
               Category Name (EN)
               <input
+                onChange={(e) => setName_en(e.target.value)}
+                defaultValue={clickData?.name_en}
                 className="w-full border border-gray-400 rounded-[8px] p-[8px]"
                 type="text"
                 required
@@ -195,6 +229,8 @@ export default function Category() {
             <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
               Category Name (RU)
               <input
+                onChange={(e) => setName_ru(e.target.value)}
+                defaultValue={clickData?.name_ru}
                 className="w-full border border-gray-400 rounded-[8px] p-[8px]"
                 type="text"
                 required
@@ -205,6 +241,8 @@ export default function Category() {
             <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
               Category Name (DE)
               <input
+                onChange={(e) => setName_de(e.target.value)}
+                defaultValue={clickData?.name_de}
                 className="w-full border border-gray-400 rounded-[8px] p-[8px]"
                 type="text"
                 required
@@ -232,7 +270,10 @@ export default function Category() {
             >
               Cencel
             </button>
-            <button onClick={() => deledecategory(selectedId)} className="py-2 px-4 bg-red-500 hover:bg-red-600 rounded-lg text-white">
+            <button
+              onClick={() => deledecategory(selectedId)}
+              className="py-2 px-4 bg-red-500 hover:bg-red-600 rounded-lg text-white"
+            >
               delete
             </button>
           </div>

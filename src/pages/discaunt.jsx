@@ -7,85 +7,113 @@ export default function Discaunt() {
   const [isOpen, setIsOpen] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
-  const [getDiscaunt,setGetdiscaunt] = useState([])
+  const [getDiscaunt, setGetdiscaunt] = useState([]);
 
-  const [discaunts,setDiscaunts] = useState()
-  const [startdate,setSatartdate] = useState()
-  const [enddate,setEnddate] = useState()
-  const [actives,setActives] = useState(false)
+  const [discaunts, setDiscaunts] = useState();
+  const [startdate, setSatartdate] = useState();
+  const [enddate, setEnddate] = useState();
+  const [actives, setActives] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
-  const token = localStorage.getItem("tokenInfo")
+  const [clickData, setClickData] = useState();
+  const token = localStorage.getItem("tokenInfo");
 
   const ModalOpen = () => {
     setIsOpen(!isOpen);
   };
   const ModalDelete = (id) => {
-    setSelectedId(id)
+    setSelectedId(id);
     setDeleteModal(!deleteModal);
   };
   const ModalEdit = () => {
     setEditModal(!editModal);
   };
 
-  const getDiscauntFunction = ()=>{
+  const getDiscauntFunction = () => {
     fetch("https://back.ifly.com.uz/api/discount")
-    .then((res)=>res.json())
-    .then((data)=>setGetdiscaunt(data.data))
-  }
+      .then((res) => res.json())
+      .then((data) => setGetdiscaunt(data.data));
+  };
 
-    const postDiscauntFunction = (event)=>{
-      event.preventDefault()
-      fetch("https://back.ifly.com.uz/api/discount",{
-        method:"POST",
-        headers:{
-          "Content-type":"application/json",
-          "authorization":`Bearer ${token}`
-        },
-        body:JSON.stringify({
-          discount:Number(discaunts),
-          started_at:startdate,
-          finished_at:enddate,
-          status:actives
-        })
-      })
-      .then((response)=>response.json())
-      .then((res)=>{
+  const postDiscauntFunction = (event) => {
+    event.preventDefault();
+    fetch("https://back.ifly.com.uz/api/discount", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        discount: Number(discaunts),
+        started_at: startdate,
+        finished_at: enddate,
+        status: actives,
+      }),
+    })
+      .then((response) => response.json())
+      .then((res) => {
         console.log(res);
-        if(res.success){
-          toast.success("Create succesufuly")
-          getDiscauntFunction()
-          setIsOpen(false)
-        }else{
-          toast.error(res.message.message)
+        if (res.success) {
+          toast.success("Create succesufuly");
+          getDiscauntFunction();
+          setIsOpen(false);
+        } else {
+          toast.error(res.message.message);
         }
-        
-      })
-    }
+      });
+  };
 
-    const deleteDiscaunt = (id) =>{
-           fetch(`https://back.ifly.com.uz/api/discount/${id}`,{
-            method:"DELETE",
-            headers:{
-              "Content-type":"application/json",
-              "authorization":`Bearer ${token}`
-            },
-           })
-           .then((response)=>response.json())
-           .then((res)=>{
-            if(res.success){
-              toast.success("Discount deleted successfully!")
-              getDiscauntFunction()
-              setDeleteModal(false)
-            }else{
-              toast.error(res.message.message)
-            }
-           })
-    }
-  
-  useEffect(()=>{
-    getDiscauntFunction()
-  },[])
-  
+  const patchDiscauntFunction = (event) => {
+    event.preventDefault();
+    fetch(`https://back.ifly.com.uz/api/discount/${clickData.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        discount: Number(discaunts),
+        started_at: startdate,
+        finished_at: enddate,
+        status: actives,
+      }),
+    })
+      .then((response) => response.json())
+      .then((res) => {
+        console.log(res);
+        if (res.success) {
+          toast.success("Edit succesufuly");
+          getDiscauntFunction();
+          setEditModal(false);
+        } else {
+          toast.error(res.message.message);
+        }
+      });
+  };
+
+  const deleteDiscaunt = (id) => {
+    fetch(`https://back.ifly.com.uz/api/discount/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((res) => {
+        if (res.success) {
+          toast.success("Discount deleted successfully!");
+          getDiscauntFunction();
+          setDeleteModal(false);
+        } else {
+          toast.error(res.message.message);
+        }
+      });
+  };
+
+  useEffect(() => {
+    getDiscauntFunction();
+  }, []);
+
   return (
     <>
       <div className="overflow-x-auto bg-white shadow-lg rounded-lg p-4">
@@ -112,26 +140,35 @@ export default function Discaunt() {
             </tr>
           </thead>
           <tbody>
-            {getDiscaunt.map((item,index) => (
+            {getDiscaunt.map((item, index) => (
               <tr key={item.id} className="border-b hover:bg-gray-100">
-                <td className="py-3 px-6 text-center">{index+1}</td>
+                <td className="py-3 px-6 text-center">{index + 1}</td>
                 <td className="py-3 px-6 text-center">{item.discount}%</td>
                 <td className="py-3 px-6 text-center">{item.started_at}</td>
                 <td className="py-3 px-6 text-center">{item.finished_at}</td>
                 <td className="py-3 px-6 text-center">
-                  <span className={item.status ? "text-green-500 font-bold" : "text-red-500 font-bold"}>
+                  <span
+                    className={
+                      item.status
+                        ? "text-green-500 font-bold"
+                        : "text-red-500 font-bold"
+                    }
+                  >
                     {item.status ? "Active" : "Inactive"}
                   </span>
                 </td>
                 <td className="py-3 px-6 text-center">
                   <button
-                    onClick={ModalEdit}
+                    onClick={() => {
+                      ModalEdit();
+                      setClickData(item);
+                    }}
                     className="py-2 px-4 bg-yellow-400 hover:bg-yellow-500 rounded-lg text-white"
                   >
                     Edit
                   </button>
                   <button
-                    onClick={()=>ModalDelete(item.id)}
+                    onClick={() => ModalDelete(item.id)}
                     className="py-2 px-4 bg-red-500 hover:bg-red-600 rounded-lg text-white"
                   >
                     Delete
@@ -149,7 +186,7 @@ export default function Discaunt() {
           <form onSubmit={postDiscauntFunction}>
             <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
               <input
-                onChange={((e)=>setDiscaunts(e.target.value))}
+                onChange={(e) => setDiscaunts(e.target.value)}
                 className="w-full border border-gray-400 rounded-[8px] p-[8px]"
                 type="number"
                 required
@@ -159,7 +196,7 @@ export default function Discaunt() {
             </label>
             <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
               <input
-              onChange={((e)=>setSatartdate(e.target.value))}
+                onChange={(e) => setSatartdate(e.target.value)}
                 className="w-full border border-gray-400 rounded-[8px] p-[8px]"
                 type="date"
                 required
@@ -168,7 +205,7 @@ export default function Discaunt() {
             </label>
             <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
               <input
-              onChange={((e)=>setEnddate(e.target.value))}
+                onChange={(e) => setEnddate(e.target.value)}
                 className="w-full border border-gray-400 rounded-[8px] p-[8px]"
                 type="date"
                 required
@@ -178,7 +215,10 @@ export default function Discaunt() {
             </label>
 
             <label className="text-gray-600 font-bold mb-6 text-center flex items-center gap-[10px]">
-              <input onChange={((e)=>setActives(e.target.checked))} type="checkbox" />
+              <input
+                onChange={(e) => setActives(e.target.checked)}
+                type="checkbox"
+              />
               Active
             </label>
 
@@ -191,9 +231,11 @@ export default function Discaunt() {
 
       {editModal && (
         <Modal close={ModalEdit} title={"Add Discount"}>
-          <form>
+          <form onSubmit={patchDiscauntFunction}>
             <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
               <input
+                onChange={(e) => setDiscaunts(e.target.value)}
+                defaultValue={clickData.discount}
                 className="w-full border border-gray-400 rounded-[8px] p-[8px]"
                 type="number"
                 required
@@ -203,6 +245,8 @@ export default function Discaunt() {
             </label>
             <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
               <input
+                onChange={(e) => setSatartdate(e.target.value)}
+                defaultValue={clickData.started_at}
                 className="w-full border border-gray-400 rounded-[8px] p-[8px]"
                 type="date"
                 required
@@ -212,6 +256,8 @@ export default function Discaunt() {
             </label>
             <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
               <input
+                onChange={(e) => setEnddate(e.target.value)}
+                defaultValue={clickData.finished_at}
                 className="w-full border border-gray-400 rounded-[8px] p-[8px]"
                 type="date"
                 required
@@ -221,7 +267,11 @@ export default function Discaunt() {
             </label>
 
             <label className="text-gray-600 font-bold mb-6 text-center flex items-center gap-[10px]">
-              <input type="checkbox" />
+              <input
+                checked={clickData.status}
+                onChange={(e) => setActives(e.target.checked)}
+                type="checkbox"
+              />
               Active
             </label>
 
@@ -244,7 +294,10 @@ export default function Discaunt() {
             >
               Cencel
             </button>
-            <button onClick={()=>deleteDiscaunt(selectedId)} className="py-2 px-4 bg-red-500 hover:bg-red-600 rounded-lg text-white">
+            <button
+              onClick={() => deleteDiscaunt(selectedId)}
+              className="py-2 px-4 bg-red-500 hover:bg-red-600 rounded-lg text-white"
+            >
               delete
             </button>
           </div>
