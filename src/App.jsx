@@ -13,6 +13,7 @@ import Faq from "./pages/faq";
 import Contact from "./pages/contact";
 import Team from "./pages/team";
 import News from "./pages/news";
+import Product from "./pages/product";
 
 function App() {
   const tokens = localStorage.getItem("tokenInfo");
@@ -44,6 +45,7 @@ function App() {
             <Route path="contact" element={<Contact />} />
             <Route path="team" element={<Team />} />
             <Route path="news" element={<News />} />
+            <Route path="product" element={<Product />} />
             
           </Route>
         </Routes>

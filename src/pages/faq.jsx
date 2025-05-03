@@ -16,6 +16,7 @@ export default function Faq() {
   const [answer_ru, setAnswer_ru] = useState();
   const [answer_de, setAnswer_de] = useState();
   const [selectID, setSelectID] = useState(null);
+  const [clickData, setClickData] = useState();
 
   const ModalOpen = () => {
     setIsOpen(!isOpen);
@@ -57,6 +58,35 @@ export default function Faq() {
           toast.success("Create successful");
           getFaqFunction();
           setIsOpen(false);
+        } else {
+          toast.error("error must be a string");
+        }
+      });
+  };
+
+  const patchFaqFunction = (event) => {
+    event.preventDefault();
+    fetch(`https://back.ifly.com.uz/api/faq/${clickData.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        question_en: question_en,
+        question_ru: question_ru,
+        question_de: question_de,
+        answer_en: answer_en,
+        answer_ru: answer_ru,
+        answer_de: answer_de,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          toast.success("Edit successful");
+          getFaqFunction();
+          setEditModal(false);
         } else {
           toast.error("error must be a string");
         }
@@ -118,7 +148,10 @@ export default function Faq() {
                 <td className="py-3 px-6 text-center">{item.answer_en}</td>
                 <td className="py-3 px-6 text-center">
                   <button
-                    onClick={ModalEdit}
+                    onClick={() => {
+                      ModalEdit();
+                      setClickData(item);
+                    }}
                     className="py-2 px-4 bg-yellow-400 hover:bg-yellow-500 rounded-lg text-white"
                   >
                     Edit
@@ -217,11 +250,12 @@ export default function Faq() {
       )}
 
       {editModal && (
-        <Modal close={ModalOpen} title={"Add FAQ"}>
-          <form>
+        <Modal close={ModalEdit} title={"Edit FAQ"}>
+          <form onSubmit={patchFaqFunction}>
             <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
               English quetion
               <input
+                defaultValue={clickData.question_en}
                 onChange={(e) => setQuestion_en(e.target.value)}
                 className="w-full border border-gray-400 rounded-[8px] p-[8px]"
                 type="text"
@@ -233,6 +267,7 @@ export default function Faq() {
             <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
               English Answer
               <input
+                defaultValue={clickData.answer_en}
                 onChange={(e) => setAnswer_en(e.target.value)}
                 className="w-full border border-gray-400 rounded-[8px] p-[8px]"
                 type="text"
@@ -245,6 +280,7 @@ export default function Faq() {
             <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
               Question (Russian)
               <input
+                defaultValue={clickData.question_ru}
                 onChange={(e) => setQuestion_ru(e.target.value)}
                 className="w-full border border-gray-400 rounded-[8px] p-[8px]"
                 type="text"
@@ -256,6 +292,7 @@ export default function Faq() {
             <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
               Answer (Russian)
               <input
+                defaultValue={clickData.answer_ru}
                 onChange={(e) => setAnswer_ru(e.target.value)}
                 className="w-full border border-gray-400 rounded-[8px] p-[8px]"
                 type="text"
@@ -268,6 +305,7 @@ export default function Faq() {
             <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
               Question (German)
               <input
+                defaultValue={clickData.question_de}
                 onChange={(e) => setQuestion_de(e.target.value)}
                 className="w-full border border-gray-400 rounded-[8px] p-[8px]"
                 type="text"
@@ -279,6 +317,7 @@ export default function Faq() {
             <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
               Answer (German)
               <input
+                defaultValue={clickData.answer_de}
                 onChange={(e) => setAnswer_de(e.target.value)}
                 className="w-full border border-gray-400 rounded-[8px] p-[8px]"
                 type="text"

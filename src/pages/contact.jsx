@@ -14,6 +14,7 @@ export default function Contact() {
   const [address_de, setAddress_de] = useState();
   const token = localStorage.getItem("tokenInfo");
   const [selectID, setSelectID] = useState(null);
+  const [clickData, setClickData] = useState();
 
   const [getContact, setGetcontact] = useState([]);
   const ModalOpen = () => {
@@ -55,6 +56,34 @@ export default function Contact() {
           toast.success("Create successful");
           getContactFunction();
           setIsOpen(false);
+        } else {
+          toast.error("error must be a string");
+        }
+      });
+  };
+
+  const patchContactFunction = (e) => {
+    e.preventDefault();
+    fetch(`https://back.ifly.com.uz/api/contact/${clickData.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        phone_number: phone_number.trim(),
+        email: email.trim(),
+        address_en: address_en.trim(),
+        address_ru: address_ru,
+        address_de: address_de,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          toast.success("Create successful");
+          getContactFunction();
+          setEditModal(false);
         } else {
           toast.error("error must be a string");
         }
@@ -117,7 +146,10 @@ export default function Contact() {
                 <td className="py-3 px-6 text-center">{item.address_en}</td>
                 <td className="py-3 px-6 text-center">
                   <button
-                    onClick={ModalEdit}
+                    onClick={() => {
+                      ModalEdit();
+                      setClickData(item);
+                    }}
                     className="py-2 px-4 bg-yellow-400 hover:bg-yellow-500 rounded-lg text-white"
                   >
                     Edit
@@ -203,19 +235,71 @@ export default function Contact() {
       )}
 
       {editModal && (
-        <Modal close={ModalEdit} title={"Edit Size"}>
-          <form>
+        <Modal close={ModalEdit} title={"Edit Contact"}>
+          <form onSubmit={patchContactFunction}>
             <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
+              Phone Number
               <input
+                defaultValue={clickData.phone_number}
+                onChange={(e) => setPhone_number(e.target.value)}
+                className="w-full border border-gray-400 rounded-[8px] p-[8px]"
+                type="tel"
+                required
+                minLength={3}
+                placeholder="Phone Number"
+              />
+            </label>
+            <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
+              Email
+              <input
+                defaultValue={clickData.email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full border border-gray-400 rounded-[8px] p-[8px]"
+                type="email"
+                required
+                minLength={3}
+                placeholder="Email"
+              />
+            </label>
+            <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
+              Address (EN)
+              <input
+                defaultValue={clickData.address_en}
+                onChange={(e) => setAddress_en(e.target.value)}
                 className="w-full border border-gray-400 rounded-[8px] p-[8px]"
                 type="text"
                 required
                 minLength={3}
-                placeholder="English name"
+                placeholder="Address (EN)"
               />
             </label>
+            <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
+              Address (RU)
+              <input
+                defaultValue={clickData.address_ru}
+                onChange={(e) => setAddress_ru(e.target.value)}
+                className="w-full border border-gray-400 rounded-[8px] p-[8px]"
+                type="text"
+                required
+                minLength={3}
+                placeholder="Address (EN)"
+              />
+            </label>
+            <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
+              Address (DE)
+              <input
+                defaultValue={clickData.address_de}
+                onChange={(e) => setAddress_de(e.target.value)}
+                className="w-full border border-gray-400 rounded-[8px] p-[8px]"
+                type="text"
+                required
+                minLength={3}
+                placeholder="Address (EN)"
+              />
+            </label>
+
             <button className="w-full py-2 px-4 bg-green-500 hover:bg-green-600 rounded-lg text-white">
-              Update Sizes
+              Update Contact
             </button>
           </form>
         </Modal>

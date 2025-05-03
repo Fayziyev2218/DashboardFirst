@@ -10,6 +10,8 @@ export default function Size() {
   const [size,setSize] = useState()
   const [selectID,setSelectID] = useState(null)
   const token = localStorage.getItem("tokenInfo")
+  const [clickData, setClickData] = useState();
+
 
 
   const ModalOpen = () => {
@@ -48,6 +50,32 @@ export default function Size() {
         toast.success("Create succesufuly")
       getSizeFunction()
       setIsOpen(false)
+      }else{
+        toast.error("size must be a string")
+      }
+      
+    })
+  }
+
+  const patchSizeFunction = (event)=>{
+    event.preventDefault()
+    fetch(`https://back.ifly.com.uz/api/sizes/${clickData.id}`,{
+      method:"PATCH",
+      headers:{
+        "Content-type":"application/json",
+        "authorization":`Bearer ${token}`
+      },
+      body:JSON.stringify({
+        size: size
+      })
+    })
+    .then((response)=>response.json())
+    .then((res)=>{
+      console.log(res);
+      if(res.success){
+        toast.success("Create succesufuly")
+      getSizeFunction()
+      setEditModal(false)
       }else{
         toast.error("size must be a string")
       }
@@ -110,7 +138,10 @@ export default function Size() {
                 <td className="py-3 px-6 text-center">{item.size}</td>
                 <td className="py-3 px-6 text-center">
                   <button
-                    onClick={ModalEdit}
+                    onClick={()=>{
+                      ModalEdit()
+                      setClickData(item)
+                    }}
                     className="py-2 px-4 bg-yellow-400 hover:bg-yellow-500 rounded-lg text-white"
                   >
                     Edit
@@ -151,9 +182,11 @@ export default function Size() {
 
       {editModal && (
         <Modal close={ModalEdit} title={"Edit Size"}>
-        <form>
+        <form onSubmit={patchSizeFunction}>
           <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
             <input
+              onChange={((e)=>setSize(e.target.value))}
+              defaultValue={clickData.size}
               className="w-full border border-gray-400 rounded-[8px] p-[8px]"
               type="text"
               required
@@ -169,7 +202,7 @@ export default function Size() {
       )}
 
       {deleteModal && (
-        <Modal close={() => setDeleteModal(false)} title={"Delete Discount"}>
+        <Modal close={() => setDeleteModal(false)} title={"Delete Size"}>
           <p className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
             Are you sure you want to delete this size?
           </p>
