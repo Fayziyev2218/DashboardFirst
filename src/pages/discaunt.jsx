@@ -113,6 +113,14 @@ export default function Discaunt() {
   useEffect(() => {
     getDiscauntFunction();
   }, []);
+  useEffect(() => {
+    if (clickData) {
+      setDiscaunts(clickData.discount || "");
+      setSatartdate(clickData.started_at || "");
+      setEnddate(clickData.finished_at || "");
+      setActives(clickData.status || false);
+    }
+  }, [clickData]);
 
   return (
     <>
@@ -268,7 +276,7 @@ export default function Discaunt() {
 
             <label className="text-gray-600 font-bold mb-6 text-center flex items-center gap-[10px]">
               <input
-                checked={clickData.status}
+                checked={actives}
                 onChange={(e) => setActives(e.target.checked)}
                 type="checkbox"
               />

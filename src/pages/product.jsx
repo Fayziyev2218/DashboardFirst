@@ -27,6 +27,7 @@ export default function Product() {
     getProductFunction();
   }, []);
   console.log(productGet);
+  
 
   return (
     <>
@@ -63,7 +64,8 @@ export default function Product() {
                   <td className="py-2 px-3">{index + 1}</td>
                   <td className="py-2 px-3">
                     <img
-                      src={item.images}
+                    
+                      src={`https://back.ifly.com.uz/${item.images}`} 
                       alt="img"
                       className="w-16 h-16 object-cover mx-auto rounded"
                     />
@@ -72,8 +74,8 @@ export default function Product() {
                   <td className="py-2 px-2">{item.description_en}</td>
                   <td className="py-2 px-2">{item.price}</td>
                   <td className="py-2 px-2">{item.category.name_en}</td>
-                  <td className="py-2 px-2">{item.colors}</td>
-                  <td className="py-2 px-2">{item.sizes}</td>
+                  <td className="py-2 px-2">{item.colors?.color_en}</td>
+                  <td className="py-2 px-2">{item.sizes?.size}</td>
                   <td className="py-2 px-2">{item.discount?.discount}%</td>
                   <td className="py-2 px-2">{item?.materials?.min_sell}</td>
                   <td className="py-2 px-2">
