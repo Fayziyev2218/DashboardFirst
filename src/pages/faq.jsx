@@ -30,14 +30,14 @@ export default function Faq() {
   };
 
   const getFaqFunction = () => {
-    fetch("https://back.ifly.com.uz/api/faq")
+    fetch("https://testaoron.limsa.uz/api/faq")
       .then((res) => res.json())
       .then((data) => setGetFaq(data.data));
   };
 
   const postFaqFunction = (event) => {
     event.preventDefault();
-    fetch("https://back.ifly.com.uz/api/faq", {
+    fetch("https://testaoron.limsa.uz/api/faq", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -66,7 +66,7 @@ export default function Faq() {
 
   const patchFaqFunction = (event) => {
     event.preventDefault();
-    fetch(`https://back.ifly.com.uz/api/faq/${clickData.id}`, {
+    fetch(`https://testaoron.limsa.uz/api/faq/${clickData.id}`, {
       method: "PATCH",
       headers: {
         "Content-type": "application/json",
@@ -94,7 +94,7 @@ export default function Faq() {
   };
 
   const deleteFaqFunction = (id) => {
-    fetch(`https://back.ifly.com.uz/api/faq/${id}`, {
+    fetch(`https://testaoron.limsa.uz/api/faq/${id}`, {
       method: "DELETE",
       headers: {
         "Content-type": "application/json",

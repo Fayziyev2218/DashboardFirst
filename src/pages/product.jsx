@@ -18,7 +18,7 @@ export default function Product() {
   };
 
   const getProductFunction = () => {
-    fetch("https://back.ifly.com.uz/api/product?page=1&limit=10&min_sell=2")
+    fetch("https://testaoron.limsa.uz/api/product?page=1&limit=10&min_sell=2")
       .then((res) => res.json())
       .then((data) => setproductGet(data.data.products));
   };
@@ -65,7 +65,7 @@ export default function Product() {
                   <td className="py-2 px-3">
                     <img
                     
-                      src={`https://back.ifly.com.uz/${item.images}`} 
+                      src={`https://testaoron.limsa.uz/${item.images}`} 
                       alt="img"
                       className="w-16 h-16 object-cover mx-auto rounded"
                     />
@@ -101,23 +101,69 @@ export default function Product() {
 
       {/* modal */}
       {isOpen && (
-        <Modal close={ModalOpen} title={"Add Sizes"}>
-          <form>
-            <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
-              <input
-                className="w-full border border-gray-400 rounded-[8px] p-[8px]"
-                type="text"
-                required
-                minLength={3}
-                placeholder="English name"
-              />
-            </label>
-            <button className="w-full py-2 px-4 bg-green-500 hover:bg-green-600 rounded-lg text-white">
-              Add Sizes
-            </button>
-          </form>
-        </Modal>
-      )}
+              <Modal close={ModalOpen} title={"Add Product"}>
+                <form>  
+                  
+                  <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
+                    Full Name
+                    <input
+                      onChange={(e) => setFull_name(e.target.value)}
+                      className="w-full border border-gray-400 rounded-[8px] p-[8px]"
+                      type="text"
+                      required
+                      minLength={3}
+                    />
+                  </label>
+
+                  <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
+                  Position (English)
+                    <input
+                      onChange={(e) => setPosition_en(e.target.value)}
+                      className="w-full border border-gray-400 rounded-[8px] p-[8px]"
+                      type="text"
+                      required
+                      minLength={3}
+                    />
+                  </label>
+
+                  <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
+                  Position (Russian)
+                    <input
+                      onChange={(e) => setPosition_ru(e.target.value)}
+                      className="w-full border border-gray-400 rounded-[8px] p-[8px]"
+                      type="text"
+                      required
+                      minLength={3}
+                    />
+                  </label>
+                  
+                  <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
+                  Position (German)
+                    <input
+                      onChange={(e) => setPosition_de(e.target.value)}
+                      className="w-full border border-gray-400 rounded-[8px] p-[8px]"
+                      type="text"
+                      required
+                      minLength={3}
+                    />
+                  </label>
+                  <label className="text-gray-600 font-bold mb-6 text-center flex flex-col gap-1 items-start">
+                  Upload Image
+                    <input
+                      onChange={(e) => setImage(e.target.files[0])}
+                      className="w-full border border-gray-400 rounded-[8px] p-[8px]"
+                      type="file"
+                      required
+                      minLength={3}
+                    />
+                  </label>
+      
+                  <button className="w-full py-2 px-4 bg-green-500 hover:bg-green-600 rounded-lg text-white">
+                     Add Team Member
+                  </button>
+                </form>
+              </Modal>
+            )}
 
       {editModal && (
         <Modal close={ModalEdit} title={"Edit Size"}>

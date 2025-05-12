@@ -30,7 +30,7 @@ export default function Team() {
   };
   
   const getTeamFunction = ()=>{
-    fetch("https://back.ifly.com.uz/api/team-section")
+    fetch("https://testaoron.limsa.uz/api/team-section")
     .then((res)=>res.json())
     .then((data)=>setGetdata(data.data))
   }
@@ -46,7 +46,7 @@ export default function Team() {
     formData.append("position_en", position_en);
     formData.append("file",image) // Fayl obyektini yuborayapmiz
   
-    fetch("https://back.ifly.com.uz/api/team-section", {
+    fetch("https://testaoron.limsa.uz/api/team-section", {
       method: "POST",
       headers: {
         authorization: `Bearer ${token}`,
@@ -76,7 +76,7 @@ export default function Team() {
     formData.append("position_en", position_en);
     formData.append("file",image) // Fayl obyektini yuborayapmiz
   
-    fetch(`https://back.ifly.com.uz/api/team-section/${clickData.id}`, {
+    fetch(`https://testaoron.limsa.uz/api/team-section/${clickData.id}`, {
       method: "PATCH",
       headers: {
         authorization: `Bearer ${token}`,
@@ -98,7 +98,7 @@ export default function Team() {
 
 
   const deledecategory = (id) => {
-    fetch(`https://back.ifly.com.uz/api/team-section/${id}`, {
+    fetch(`https://testaoron.limsa.uz/api/team-section/${id}`, {
       method: "DELETE",
       headers: {
         "Content-type": "application/json",
@@ -148,7 +148,7 @@ export default function Team() {
             {getData.map((item,index) => (
               <tr key={item.id} className="border-b hover:bg-gray-100">
                 <td className="py-3 px-6 text-center">{index+1}</td>
-                <td className="py-3 px-6 text-center"><img className="rounded-sm w-[130px] h-[100px]" src={`https://back.ifly.com.uz/${item.image}`} alt={item.full_name} /></td>
+                <td className="py-3 px-6 text-center"><img className="rounded-sm w-[130px] h-[100px]" src={`https://testaoron.limsa.uz/${item.image}`} alt={item.full_name} /></td>
                 <td className="py-3 px-6 text-center">{item.full_name}</td>
                 <td className="py-3 px-6 text-center">{item.position_en}</td>
                 <td className="py-3 px-6 text-center">

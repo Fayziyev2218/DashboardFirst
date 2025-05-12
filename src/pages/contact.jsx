@@ -29,14 +29,14 @@ export default function Contact() {
   };
 
   const getContactFunction = () => {
-    fetch("https://back.ifly.com.uz/api/contact")
+    fetch("https://testaoron.limsa.uz/api/contact")
       .then((res) => res.json())
       .then((data) => setGetcontact(data.data));
   };
 
   const postContactFunction = (e) => {
     e.preventDefault();
-    fetch("https://back.ifly.com.uz/api/contact", {
+    fetch("https://testaoron.limsa.uz/api/contact", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -64,7 +64,7 @@ export default function Contact() {
 
   const patchContactFunction = (e) => {
     e.preventDefault();
-    fetch(`https://back.ifly.com.uz/api/contact/${clickData.id}`, {
+    fetch(`https://testaoron.limsa.uz/api/contact/${clickData.id}`, {
       method: "PATCH",
       headers: {
         "Content-type": "application/json",
@@ -90,7 +90,7 @@ export default function Contact() {
       });
   };
   const deleteFaqFunction = (id) => {
-    fetch(`https://back.ifly.com.uz/api/contact/${id}`, {
+    fetch(`https://testaoron.limsa.uz/api/contact/${id}`, {
       method: "DELETE",
       headers: {
         "Content-type": "application/json",

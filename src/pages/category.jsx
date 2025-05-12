@@ -28,14 +28,14 @@ export default function Category() {
   };
 
   const GetCategory = () => {
-    fetch("https://back.ifly.com.uz/api/category")
+    fetch("https://testaoron.limsa.uz/api/category")
       .then((response) => response.json())
       .then((res) => setGetcate(res.data));
   };
 
   const CategoryPost = (event) => {
     event.preventDefault();
-    fetch("https://back.ifly.com.uz/api/category", {
+    fetch("https://testaoron.limsa.uz/api/category", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -62,7 +62,7 @@ export default function Category() {
 
   const CategoryPatch = (event) => {
     event.preventDefault();
-    fetch(`https://back.ifly.com.uz/api/category/${clickData?.id}`, {
+    fetch(`https://testaoron.limsa.uz/api/category/${clickData?.id}`, {
       method: "PATCH",
       headers: {
         "Content-type": "application/json",
@@ -88,7 +88,7 @@ export default function Category() {
   };
 
   const deledecategory = (id) => {
-    fetch(`https://back.ifly.com.uz/api/category/${id}`, {
+    fetch(`https://testaoron.limsa.uz/api/category/${id}`, {
       method: "DELETE",
       headers: {
         "Content-type": "application/json",

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from 'react-toastify';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 export default function () {
   const [login, setLogin] = useState();
@@ -14,7 +16,7 @@ export default function () {
 
   const LoginSubmit = (events) =>{
     events.preventDefault()
-    fetch("https://back.ifly.com.uz/api/auth/login",{
+    fetch("https://testaoron.limsa.uz/api/auth/login",{
         method: "POST",
         headers:{
             "Content-type": "application/json"
@@ -24,7 +26,7 @@ export default function () {
             password:password
         })
     }).then((response)=>response.json())
-    .then((item)=>{
+       .then((item)=>{
         console.log(item);
         
         if(item.success){
@@ -33,7 +35,7 @@ export default function () {
             localStorage.setItem("refreshtokenInfo",item.data?.refresh_token)
             navigate("/home")
         }else{
-            toast.error(item?.message?.message);
+            toast.error(item?.message?.error);
         }
             
     })
@@ -72,9 +74,9 @@ export default function () {
                 <button
                   type="button"
                   onClick={togglePassword}
-                  className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 focus:outline-none"
+                  className="absolute right-3 top-2.5 text-gray-600 "
                 >
-                  {showPassword ? "👁️" : "👁️"}
+                  {showPassword ? <FontAwesomeIcon icon={faEye} /> : <FontAwesomeIcon icon={faEyeSlash} /> }
                 </button>
               </div>
             </div>
@@ -103,7 +105,7 @@ export default function () {
 
 //   const submitFunction = (item)=>{
 //      item.preventDefault()
-//      fetch("https://back.ifly.com.uz/api/auth/login",{
+//      fetch("https://testaoron.limsa.uz/api/auth/login",{
 //         method: "POST",
 //         headers:{
 //             "Content-type": "application/json"

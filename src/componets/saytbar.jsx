@@ -6,7 +6,7 @@ export default function Saytbar() {
     <div className="bg-gray-800 p-4 w-64 h-screen fixed top-0 left-0 flex flex-col items-center">
   <img className="w-[80px] h-[80px] mb-4" src={logo} alt="logo" />
   <ul className="w-full">
-  <li className="mb-[10px]">
+  {/* <li className="mb-[10px]">
       <NavLink
         to="product"
         className={({ isActive }) =>
@@ -17,7 +17,7 @@ export default function Saytbar() {
       >
         Product
       </NavLink>
-    </li>
+    </li> */}
     <li className="mb-[10px]">
       <NavLink
         index="true"

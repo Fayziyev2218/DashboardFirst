@@ -26,14 +26,14 @@ export default function Colors() {
   };
 
   const getColorFunction = () => {
-    fetch("https://back.ifly.com.uz/api/colors")
+    fetch("https://testaoron.limsa.uz/api/colors")
       .then((res) => res.json())
       .then((color) => setColors(color.data));
   };
 
   const postColorFuncton = (e) => {
     e.preventDefault();
-    fetch("https://back.ifly.com.uz/api/colors", {
+    fetch("https://testaoron.limsa.uz/api/colors", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -59,7 +59,7 @@ export default function Colors() {
 
   const patchColorFuncton = (e) => {
     e.preventDefault();
-    fetch(`https://back.ifly.com.uz/api/colors/${clickData.id}`, {
+    fetch(`https://testaoron.limsa.uz/api/colors/${clickData.id}`, {
       method: "PATCH",
       headers: {
         "Content-type": "application/json",
@@ -84,7 +84,7 @@ export default function Colors() {
   };
 
   const deleteColorFunction = (id) => {
-    fetch(`https://back.ifly.com.uz/api/colors/${id}`, {
+    fetch(`https://testaoron.limsa.uz/api/colors/${id}`, {
       method: "DELETE",
       headers: {
         "Content-type": "application/json",

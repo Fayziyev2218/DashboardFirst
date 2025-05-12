@@ -29,14 +29,14 @@ export default function Discaunt() {
   };
 
   const getDiscauntFunction = () => {
-    fetch("https://back.ifly.com.uz/api/discount")
+    fetch("https://testaoron.limsa.uz/api/discount")
       .then((res) => res.json())
       .then((data) => setGetdiscaunt(data.data));
   };
 
   const postDiscauntFunction = (event) => {
     event.preventDefault();
-    fetch("https://back.ifly.com.uz/api/discount", {
+    fetch("https://testaoron.limsa.uz/api/discount", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -64,7 +64,7 @@ export default function Discaunt() {
 
   const patchDiscauntFunction = (event) => {
     event.preventDefault();
-    fetch(`https://back.ifly.com.uz/api/discount/${clickData.id}`, {
+    fetch(`https://testaoron.limsa.uz/api/discount/${clickData.id}`, {
       method: "PATCH",
       headers: {
         "Content-type": "application/json",
@@ -91,7 +91,7 @@ export default function Discaunt() {
   };
 
   const deleteDiscaunt = (id) => {
-    fetch(`https://back.ifly.com.uz/api/discount/${id}`, {
+    fetch(`https://testaoron.limsa.uz/api/discount/${id}`, {
       method: "DELETE",
       headers: {
         "Content-type": "application/json",

@@ -31,7 +31,7 @@ export default function News() {
   };
 
   const getNewsFunction = () => {
-    fetch("https://back.ifly.com.uz/api/news")
+    fetch("https://testaoron.limsa.uz/api/news")
       .then((res) => res.json())
       .then((data) => setGetdata(data.data));
   };
@@ -46,7 +46,7 @@ export default function News() {
     formData.append("description_ru", description_ru);
     formData.append("description_de", description_de);
     formData.append("file",image)
-    fetch("https://back.ifly.com.uz/api/news", {
+    fetch("https://testaoron.limsa.uz/api/news", {
       method: "POST",
       headers: {
         authorization: `Bearer ${token}`,
@@ -76,7 +76,7 @@ export default function News() {
     formData.append("description_ru", description_ru);
     formData.append("description_de", description_de);
     formData.append("file",image)
-    fetch(`https://back.ifly.com.uz/api/news/${clickData.id}`, {
+    fetch(`https://testaoron.limsa.uz/api/news/${clickData.id}`, {
       method: "PATCH",
       headers: {
         authorization: `Bearer ${token}`,
@@ -97,7 +97,7 @@ export default function News() {
   };
 
   const deledeNewsFunction = (id) => {
-    fetch(`https://back.ifly.com.uz/api/news/${id}`, {
+    fetch(`https://testaoron.limsa.uz/api/news/${id}`, {
       method: "DELETE",
       headers: {
         "Content-type": "application/json",
@@ -148,7 +148,7 @@ export default function News() {
                 <td className="py-3 px-6 text-center">
                   <img
                     className="rounded-sm w-[130px] h-[100px]"
-                    src={`https://back.ifly.com.uz/${item.image}`}
+                    src={`https://testaoron.limsa.uz/${item.image}`}
                     alt={item.title_en}
                   />
                 </td>
